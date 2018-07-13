@@ -1,0 +1,166 @@
+void memory() {
+lastlevel=1;
+timer memtime;
+int levcap=4;
+sound fail;
+fail.load("fail_normal");
+//here
+cube gamer;
+sound levs;
+sound gm;
+cube mycube;
+timer pos;
+int level=1;
+int length=3;
+int[] chain;
+score=0;
+bool playing;
+bool gotit=false;
+playing=true;
+sound sp;
+int round;
+levcount=1;
+for (round=1;round<=3;round++) {
+gm.stream("bgmm");
+sp.load(sl+"round");
+sp.play_wait();
+vo.speak_wait(round);
+sp.load(sl+"startwith");
+sp.play_wait();
+sp.load(sl+"color_1_"+gamer.color);
+sp.play_wait();
+mycube.color=gamer.color;
+int rand;
+chain.resize(0);
+for (uint i=1;i<=length;i++) {
+rand=random(1,4);
+mycube.move(rand);
+chain.insert_last(mycube.color);
+}
+wait(random(1400,2500));
+if (!gm.playing) gm.play_looped();
+pos.restart();
+memtime.restart();
+memtime.pause();
+for (uint i=0;i<length;i++) {
+sp.load(sl+"color_1_"+chain[i]);
+sp.play_wait();
+}
+memtime.resume();
+levcount=1;
+gotit=false;
+memtime.restart();
+playing=true;
+while (playing) {
+wait(5);
+if (key_pressed(KEY_ESCAPE)) {
+lastscore=score;
+lastmode=2;
+playing=false;
+gm.stop();
+speakstats();
+start();
+return;
+}
+if (memtime.elapsed>=3000) {
+playing=false;
+//round++;
+mycube.color=gamer.color;
+levcount=1;
+gm.stop();
+fail.play_wait();
+}
+if (key_pressed(KEY_UP)) {
+gamer.move(1);
+memtime.restart();
+if (gamer.color==chain[0]) {
+correct();
+chain.remove_at(0);
+score++;
+}
+else {
+playing=false;
+mycube.color=gamer.color;
+levcount=1;
+//round++;
+gm.stop();
+fail.play_wait();
+}
+}
+if (key_pressed(KEY_DOWN)) {
+memtime.restart();
+gamer.move(2);
+if (gamer.color==chain[0]) {
+correct();
+chain.remove_at(0);
+score++;
+}
+else {
+playing=false;
+mycube.color=gamer.color;
+levcount=1;
+//round++;
+gm.stop();
+fail.play_wait();
+}
+}
+if (key_pressed(KEY_RIGHT)) {
+gamer.move(3);
+memtime.restart();
+if (gamer.color==chain[0]) {
+correct();
+chain.remove_at(0);
+score++;
+}
+else {
+playing=false;
+mycube.color=gamer.color;
+levcount=1;
+//round++;
+gm.stop();
+fail.play_wait();
+}
+}
+if (key_pressed(KEY_LEFT)) {
+gamer.move(4);
+memtime.restart();
+if (gamer.color==chain[0]) {
+correct();
+chain.remove_at(0);
+score++;
+}
+else {
+playing=false;
+mycube.color=gamer.color;
+levcount=1;
+//round++;
+gm.stop();
+fail.play_wait();
+}
+}
+if (chain.length()<=0) {
+length++;
+chain.resize(0);
+for (uint i=1;i<=length;i++) {
+rand=random(1,4);
+mycube.move(rand);
+chain.insert_last(mycube.color);
+}
+memtime.restart();
+memtime.pause();
+for (uint i=0;i<length;i++) {
+sp.load(sl+"color_1_"+chain[i]);
+sp.play_wait();
+}
+memtime.resume();
+}
+}//while
+}//for
+playing=false;
+level=500;
+speakstats();
+lastscore=score;
+lastmode=2;
+start();
+return;
+}

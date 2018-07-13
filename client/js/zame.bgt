@@ -1,0 +1,70 @@
+}
+void learnsounds() {
+sound sounder;
+enhanced_menu smenu;
+smenu.move_path="menu_move";
+smenu.add_item_1d(sl+"lmenu_goback","esc");
+string[] adds;
+string[] addf;
+addf.insert_last("goback");
+adds.insert_last("esc");
+//addf.insert_last("cone");
+//adds.insert_last("loop_cone");
+for (uint i=0;i<adds.length();i++) {
+smenu.add_item_1d(sl+"lmenu_"+addf[i],adds[i]);
+}
+string o;
+o=smenu.run_extended(sl+"lmenu_intro",false,"esc",true);
+while (o!="esc") {
+sounder.stop();
+sounder.stream(o);
+sounder.play();
+o=smenu.run_extended("",true,o,false);
+wait(5);
+}
+sounder.stop();
+start();
+return;
+}
+void speakstats() {
+speak("yfs",true);
+vo.speak(score);
+while (vo.speak_next()==1) {
+wait(5);
+}
+speak("points",true);
+}
+void practice() {
+cube prac;
+prac.color=0;
+pool.play_stationary(sl+"practice",false);
+while (!this.input.isJustPressed(KeyEvent.DOM_VK_ESCAPE)) {
+wait(5);
+if (this.input.isJustPressed(KeyEvent.DOM_VK_UP)) {
+prac.move(1);
+pool.destroy_all();
+pool.play_stationary("speaker_"+lang+"_color_1_"+prac.color,false);
+}
+else if (this.input.isJustPressed(KeyEvent.DOM_VK_DOWN)) {
+prac.move(2);
+pool.destroy_all();
+pool.play_stationary("speaker_"+lang+"_color_1_"+prac.color,false);
+}
+else if (this.input.isJustPressed(KeyEvent.DOM_VK_RIGHT)) {
+prac.move(3);
+pool.destroy_all();
+pool.play_stationary("speaker_"+lang+"_color_1_"+prac.color,false);
+}
+else if (this.input.isJustPressed(KeyEvent.DOM_VK_LEFT)) {
+prac.move(4);
+pool.destroy_all();
+pool.play_stationary("speaker_"+lang+"_color_1_"+prac.color,false);
+}
+}
+start();
+return;
+}
+void correct() {
+pool.play_stationary(sl+"good"+random(1,4),false);
+pool.play_stationary("good"+random(1,2),false);
+}
