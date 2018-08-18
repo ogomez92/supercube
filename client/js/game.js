@@ -22,7 +22,6 @@ this.level=0;
 		this.input.init();
 this.levcap=4;
 this.fail=so.create("fail_normal");
-//here
 this.gamer=new Cube();
 this.mycube=new Cube();
 this.pos=new OldTimer();;
@@ -38,7 +37,7 @@ this.levcount=1;
 	for (this.round=1;this.round<=3;this.round++) {
 	speech.speak("new round"+this.round);
 this.gm=so.create("bgm"+this.level);
-if (this.level<30) so.enqueue("bgm"+this.level+1);
+if (this.level<30) so.enqueue("bgm"+(Number(this.level)+1));
 so.loadQueue();
 this.sp=so.create("round"+lang);
 await this.sp.playSync();
@@ -61,13 +60,14 @@ this.sp.play();
 this.levcount=1;
 this.gotit=false;
 this.playing=true;
+this.input.resume();
 while (this.playing) {
 await utils.sleep(5);
-if (this.input.isJustPressed(KeyEvent.DOM_VK_ESCAPE)) {
-this.playing=false;
-gm.stop();
+if (this.input.isJustPressed(KeyEvent.DOM_VK_Q)) {
+this.gm.stop();
 this.speakstats();
 start();
+this.playing=false;
 return;
 }
 if (this.pos.elapsed>=(this.gm.duration/4)) {
@@ -76,21 +76,23 @@ if (this.gamer.color==this.mycube.color) {
 if (this.levcount==this.levcap) {
 this.gotit=false;
 this.levcount=1;
-level++;
+this.level++;
 if (this.level<=8) this.aggressivity=1;
 else if (this.level>8) this.aggressivity=2;
 if (this.level<=11) this.levcap=4;
 else if (this.level>11 && this.level<=20) this.levcap=8;
 else if (this.level>20 && this.level<=29) this.levcap=12;
 else if (this.level==30) this.levcap=16;
+this.gm.destroy();
 if (this.level>30) {
 score+=10000;
 this.win=so.create("winner");
+this.gm.stop();
 await win.playSync();
 this.speakstats();
-this.playing=false;
-this.gm.stop();
+this.round=4;
 start();
+this.playing=false;
 return;
 }//win
 else {//next level?
@@ -98,7 +100,7 @@ this.gotit=false;
 this.gm=so.create("bgm"+this.level);
 this.gm.play();
 this.gm.loop=true;
-if (this.level<30) so.enqueue("bgm_"+this.level+1);
+if (this.level<30) so.enqueue("bgm"+(Number(this.level)+1));
 so.loadQueue();
 this.levcount=1;
 this.mycube.move(utils.randomInt(1,4));
@@ -116,44 +118,55 @@ this.gotit=false;
 }//levcount
 }//color
 else {
-this.playing=false;
-//round++;
 this.mycube.color=this.gamer.color;
 this.levcount=1;
 this.gm.stop();
-await this.fail.playSync();
+this.fail.play(); this.pos.pause();
+this.input.pause();
+this.fail.sound.once("end",()=> {
+this.playing=false;
+});
 }//color
 }//position timer
 if (this.input.isJustPressed(KeyEvent.DOM_VK_UP) && !this.gotit) {
 this.gamer.move(1);
 if (this.gamer.color==this.mycube.color) {
 this.gotit=true;
+console.log("up");
 this.correct();
 this.score+=1;
 }
 else {
-this.playing=false;
 this.mycube.color=this.gamer.color;
 this.levcount=1;
 this.gm.stop();
-await this.fail.playSync();
+this.fail.play(); this.pos.pause();
+this.input.pause();
+this.fail.sound.once("end",()=> {
+this.playing=false;
+});
 }
 }
 if (this.input.isJustPressed(KeyEvent.DOM_VK_DOWN) && !this.gotit) {
 this.gamer.move(2);
-
 if (this.gamer.color==this.mycube.color) {
 this.gotit=true;
+console.log("down");
 this.correct();
 this.score+=1;
 }
 else {
-this.playing=false;
+
 this.mycube.color=this.gamer.color;
 this.levcount=1;
 //round++;
 this.gm.stop();
-await this.fail.playSync();
+this.fail.play(); this.pos.pause();
+this.input.pause();
+this.fail.sound.once("end",()=> {
+this.playing=false;
+});
+
 }
 }
 if (this.input.isJustPressed(KeyEvent.DOM_VK_RIGHT) && !this.gotit) {
@@ -161,17 +174,21 @@ this.gamer.move(3);
 
 if (this.gamer.color==this.mycube.color) {
 this.gotit=true;
+console.log("right");
 this.correct();
 this.score+=1;
 }
 else {
 
-this.playing=false;
 this.mycube.color=this.gamer.color;
 this.levcount=1;
 //round++;
 this.gm.stop();
-await this.fail.playSync();
+this.fail.play(); this.pos.pause();
+this.input.pause();
+this.fail.sound.once("end",()=> {
+this.playing=false;
+});
 }
 }
 if (this.input.isJustPressed(KeyEvent.DOM_VK_LEFT) && !this.gotit) {
@@ -179,24 +196,31 @@ this.gamer.move(4);
 
 if (this.gamer.color==this.mycube.color) {
 this.gotit=true;
+console.log("left");
 this.correct();
 this.score+=1;
 }
 else {
-this.playing=false;
 this.mycube.color=this.gamer.color;
 this.levcount=1;
-//round++;
+//this.round++;
 this.gm.stop();
-await this.fail.playSync();
+this.fail.play(); this.pos.pause();
+this.input.pause();
+this.fail.sound.once("end",()=> {
+this.playing=false;
+});
 }
 }
 }//while
+speech.speak("end of loop"+this.round);
 }//for		
 }
 correct() {
 this.sounds.playStatic("speaker_"+lang+"_good"+utils.randomInt(1,4),false);
-this.sounds.playStatic("good"+utils.randomInt(1,2));
+this.sounds.playStatic("good"+utils.randomInt(1,2),false);
+}
+speakstats() {
 }
 	}
 export {Game}

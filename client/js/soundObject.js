@@ -48,15 +48,16 @@ class SoundObjectItem {
 	}
 	
 playSync() {
+this.sound.play();
 let inp=new KeyboardInput();
 inp.init();
- this.sound.play();
+ 
  inp.justPressedEventCallback=((evt)=> {
- if (evt==KeyEvent.DOM_VK_Q || evt==KeyEvent.DOM_VK_X) {
+if (evt==KeyEvent.DOM_VK_Q || evt==KeyEvent.DOM_VK_X) {
  this.sound.stop();
- inp.justPressedEventCallback=null;
+inp.justPressedEventCallback=null;
  }
- });
+});
  return new Promise((resolve,reject)=>{
  this.sound.once("end",()=> {
  this.sound.unload();
@@ -259,14 +260,14 @@ class SoundObject {
 				this.handleQueue();
 				return;
 			}
-			console.log(this.queue[0]);
+			console.log("load "+this.queue[0]);
 			try {
 			this.sounds.push(new SoundObjectItem(this.queue[0], (() => {
  that.handleQueue();
 			}), 1));
 			}
 			catch(err) {
-				console.log("error");
+				console.log("queue load error"+err);
 			}
 			finally {
 			this.queue.splice(0, 1);

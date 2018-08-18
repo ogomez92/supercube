@@ -7,6 +7,7 @@ class KeyboardInput {
 		this.justPressed = [];
 		this.chars = [];
 		this.justReleased = [];
+		this.paused=false;
 		this.justPressedEventCallback = null;
 		this.charEventCallback=null;
 	}
@@ -25,7 +26,12 @@ class KeyboardInput {
  that.handleChar(event);
 				});
 	}
-
+pause() {
+this.paused=true;
+}
+resume() {
+this.paused=false;
+}
 	handleKeyDown(event) {
 		if (this.keyDown[event.which] != true || typeof this.keyDown[event.which] === 'undefined') {
 			this.keyDown[event.which] = true;
@@ -60,25 +66,28 @@ this.charEventCallback(String.fromCharCode(char.which));
 	}
 
 	isDown(event) {
+	if (this.paused) return false;
 		return this.keyDown[event];
 	}
 
 	isJustPressed(event) {
+	
 		if (this.justPressed[event] == true) {
 			this.justPressed[event] = false;
+			if (this.paused) return false;
 			return true;
 		}
 		return false;
 	}
 
 	isJustReleased(event) {
-		if (this.justReleased[event]) {
+			if (this.justReleased[event]) {
 			this.justReleased[event] = false;
+			if (this.paused) return false;
 			return true;
 		}
 		return false;
 	}
-
 	keysDown() {
 		const kd = [];
 	this.keyDown.forEach((v, i) => {

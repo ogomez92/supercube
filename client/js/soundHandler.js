@@ -16,7 +16,7 @@ class SoundHandler {
 		this.directional = directional;
 	}
 
-	playStatic(file, loop = 1, slot = -1,) {
+	playStatic(file, loop = 0, slot = -1,) {
 		if (slot = -1) {
 			slot = this.findFreeStaticSlot();
 		}

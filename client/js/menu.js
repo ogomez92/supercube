@@ -9,7 +9,7 @@ import {KeyEvent} from './keycodes';
 import {KeyboardInput} from './input';
 
 class Menu {
-	constructor(name, menuData, isAudio,music) {
+	constructor(name, menuData, isAudio=false,music) {
 		this.menuData = menuData;
 		this.isAudio=isAudio;
 		this.first=true;
@@ -137,7 +137,7 @@ if (this.menuData[i].type==MenuTypes.AUDIO) this.menuData[i].snd.stop();
 		this.sndSelector.destroy();
 		this.sndWrap.destroy();
 		for (let i=0;i<this.menuData.length;i++) {
-		if (this.menuData[i].type==MenuTypes.AUDIO) i.snd.destroy();
+				if (this.menuData[i].type==MenuTypes.AUDIO) this.menuData[i].snd.destroy();
 		}
 		if (typeof this.music !== 'undefined') {
 this.music.destroy();
