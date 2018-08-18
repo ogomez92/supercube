@@ -1,4 +1,5 @@
 export var gameID="cube";
+export var pack=1;
 import {so} from './soundObject';
 export var lang=2;
 import {Game} from './game';

@@ -1,6 +1,6 @@
 import {speech} from './tts';
 import {SoundHandler} from './soundHandler';
-import {lang,start} from './main';
+import {pack,lang,start} from './main';
 import {OldTimer} from './oldtimer';
 import {Cube} from './classes';
 import Timer from './timer';
@@ -45,7 +45,7 @@ this.sp=so.create(lang+"num"+this.round);
 await this.sp.playSync();
 this.sp=so.create("startwith"+lang);
 await this.sp.playSync();
-this.sp=so.create("speaker_"+lang+"_color_1_"+this.gamer.color);
+if (pack==1) this.sp=so.create("speaker_"+lang+"_color_1_"+this.gamer.color);
 await this.sp.playSync();
 this.mycube.color=this.gamer.color;
 this.mycube.move(utils.randomInt(1,4));
@@ -55,7 +55,7 @@ this.gm.play();
 this.gm.loop=true;
 }
 this.pos.restart();
-this.sp=so.create("speaker_"+lang+"_color_"+this.aggressivity+"_"+this.mycube.color);
+if (pack==1) this.sp=so.create("speaker_"+lang+"_color_"+this.aggressivity+"_"+this.mycube.color);
 this.sp.play();
 this.levcount=1;
 this.gotit=false;
@@ -104,7 +104,7 @@ if (this.level<30) so.enqueue("bgm"+(Number(this.level)+1));
 so.loadQueue();
 this.levcount=1;
 this.mycube.move(utils.randomInt(1,4));
-this.sp=so.create("speaker_"+lang+"_color_"+this.aggressivity+"_"+this.mycube.color);
+if (pack==1) this.sp=so.create("speaker_"+lang+"_color_"+this.aggressivity+"_"+this.mycube.color);
 this.sp.play();
 }//going for the next level, win
 }//levcount
@@ -112,7 +112,7 @@ else {//levcount isn't capped...
 this.levcount++;
 this.mycube.color=this.gamer.color;
 this.mycube.move(utils.randomInt(1,4));
-this.sp=so.create("speaker_"+lang+"_color_"+this.aggressivity+"_"+this.mycube.color);
+if (pack==1) this.sp=so.create("speaker_"+lang+"_color_"+this.aggressivity+"_"+this.mycube.color);
 this.sp.play();
 this.gotit=false;
 }//levcount
@@ -218,7 +218,7 @@ speech.speak("end of loop"+this.round);
 }
 correct() {
 this.sounds.playStatic("speaker_"+lang+"_good"+utils.randomInt(1,4),false);
-this.sounds.playStatic("good"+utils.randomInt(1,2),false);
+if (pack==1) this.sounds.playStatic("good"+utils.randomInt(1,2),false);
 }
 speakstats() {
 }
