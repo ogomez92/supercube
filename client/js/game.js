@@ -33,11 +33,11 @@ this.aggressivity=1;
 this.score=0;
 this.gotit=false;
 this.playing=true;
-this.round=0;
+this.round=4;
 this.levcount=1;
 	}
 	async start() {
-	for (this.round=1;this.round<=3;this.round++) {
+	while (this.round>=0) {
 	this.gm=so.create("bgm"+this.level);
 if (this.level<30) so.enqueue("bgm"+(Number(this.level)+1));
 so.loadQueue();
@@ -213,7 +213,8 @@ this.playing=false;
 }
 }
 }//while
-}//for		
+this.round--;
+}//round loop
 }
 correct() {
 this.sounds.playStatic("speaker_"+lang+"_good"+utils.randomInt(1,4),false);
