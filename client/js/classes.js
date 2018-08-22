@@ -1,70 +1,65 @@
 import {utils} from './utilities';
 class Cube {
 constructor() {
-this.lastcolor=0;
+this.ptop=1;
+this.pbot =6;
+this.pleft = 2;
+this.pright = 4;
+this.pforward = 3;
+this.pback = 5;
+this.top=1;
 this.color=0;
-this.colors=[];
-this.color=utils.randomInt(0,5);
-this.lastcolor=this.color;
-if (this.lastcolor==3 || this.lastcolor==5) this.lastcolor=0;
+this.bot =6;
+this.left = 2;
+this.right = 4;
+this.forward = 3;
+this.back = 5;
 }
 move(dir) {
-switch(this.color) {
-case 0:
-switch(dir) {
-case 1: this.color=1; break;
-case 2: this.color=4; break;
-case 3: this.color=3; break;
-case 4: this.color=5; break;
-}//direction
-this.lastcolor=this.color;
-break;
-case 1:
-switch(dir) {
-case 1: this.color=2; break;
-case 2: this.color=0; break;
-case 3: this.color=3; break;
-case 4: this.color=5; break;
-}//direction
-this.lastcolor=this.color;
-break;
-case 2:
-switch(dir) {
-case 1: this.color=4; break;
-case 2: this.color=1; break;
-case 3: this.color=5; break;
-case 4: this.color=3; break;
-}//direction
-this.lastcolor=this.color;
-break;
-case 3:
-switch(dir) {
-case 1: this.color=1; break;
-case 2: this.color=4; break;
-case 3: this.color=2; break;
-case 4: this.color=0; break;
-}//direction
-break;
-case 4:
-switch(dir) {
-case 1: this.color=0; break;
-case 2: this.color=2; break;
-case 3: this.color=5; break;
-case 4: this.color=3; break;
-}//direction
-this.lastcolor=this.color;
-break;
-case 5:
-switch(dir) {
-case 1: this.color=4; break;
-case 2: this.color=1; break;
-case 3: this.color=0; break;
-case 4: this.color=2; break;
+if (dir==4) {
+this.bot=this.pleft;
+this.left=this.ptop;
+this.top=this.pright;
+this.right=this.pbot;
+this.ptop=this.top;
+this.pbot=this.bot;
+this.pleft=this.left;
+this.pright=this.right;
+this.color=Number(this.top)-1; return this.top-1;
+}
+if (dir==3) {
+this.top=this.pleft;
+this.right=this.ptop;
+this.left=this.pbot;
+this.bot=this.pright;
+this.ptop=this.top;
+this.pbot=this.bot;
+this.pleft=this.left;
+this.pright=this.right;
+this.color=Number(this.top)-1; return this.top-1;
+}
+if (dir==2) {
+this.top=this.pforward;
+this.back=this.ptop;
+this.bot=this.pback;
+this.forward=this.pbot;
+this.ptop=this.top;
+this.pbot=this.bot;
+this.pforward=this.forward;
+this.color=Number(this.top)-1; return this.top-1;
+}
+if (dir==1) {
+this.top=this.pback;
+this.back=this.pbot;
+this.bot=this.pforward;
+this.forward=this.ptop;
+this.ptop=this.top;
+this.pbot=this.bot;
+this.pforward=this.forward;
+this.pback=this.back;
+this.color=Number(this.top)-1; return this.top-1;
+}
 
-}//direction
-break;
-}//color
-return this.color;
 }//function
 }//class
 export {Cube}

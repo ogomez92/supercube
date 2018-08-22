@@ -1,7 +1,11 @@
 export var gameID="cube";
+import {utils} from './utilities';
+import {Cube} from './classes';
+import {KeyboardInput} from './input';
+import {KeyEvent} from './keycodes';
 export var pack=1;
 import {so} from './soundObject';
-export var lang=2;
+export var lang=0;
 import {Game} from './game';
 export var version="1.0";
 export var version2="";
@@ -21,7 +25,22 @@ fetch('http://yourserver.com/versions.php?gameVersionRequest='+gameID)
 				resolve(data); //resolve promise let go.
 			});
 });
-console.log("Success!");
+let langs=so.create("ui/lang_select");
+langs.play();
+let linput=new KeyboardInput();
+linput.init();
+while (lang==0) {
+await utils.sleep(16);
+if (linput.isJustPressed(KeyEvent.DOM_VK_1)) {
+lang=1;
+}
+if (linput.isJustPressed(KeyEvent.DOM_VK_2)) {
+lang=2;
+}
+}
+langs.destroy();
+langs=so.create("ui/forms_"+lang);
+await langs.playSync();
 start();
 }
 export function start() {
@@ -52,4 +71,38 @@ mainMenu.destroy();
 function startgame() {
 const game=new Game();
 game.start();
+}
+async function practice() {
+let inp=new KeyboardInput();
+let sp="";
+let cube=new Cube();
+inp.init();
+if (pack==1) sp=so.create("speaker_"+lang+"_color_1_"+cube.color);
+sp.play();
+while (!inp.isJustPressed(KeyEvent.DOM_VK_Q)) {
+if (inp.isJustPressed(KeyEvent.DOM_VK_UP)) {
+cube.move(1);
+if (pack==1) sp=so.create("speaker_"+lang+"_color_1_"+cube.color);
+sp.play();
+}
+if (inp.isJustPressed(KeyEvent.DOM_VK_DOWN)) {
+cube.move(2);
+if (pack==1) sp=so.create("speaker_"+lang+"_color_1_"+cube.color);
+sp.play();
+}
+if (inp.isJustPressed(KeyEvent.DOM_VK_LEFT)) {
+cube.move(4);
+if (pack==1) sp=so.create("speaker_"+lang+"_color_1_"+cube.color);
+sp.play();
+}
+if (inp.isJustPressed(KeyEvent.DOM_VK_RIGHT)) {
+cube.move(3);
+if (pack==1) sp=so.create("speaker_"+lang+"_color_1_"+cube.color);
+sp.play();
+}
+
+}
+so.kill(()=> {
+start();
+});
 }

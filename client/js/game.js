@@ -23,7 +23,10 @@ this.level=0;
 this.levcap=4;
 this.fail=so.create("fail_normal");
 this.gamer=new Cube();
+this.random=utils.randomInt(1,4);
 this.mycube=new Cube();
+this.gamer.move(this.random);
+this.mycube.move(this.random);
 this.pos=new OldTimer();;
 this.level=1;
 this.aggressivity=1;
@@ -35,8 +38,7 @@ this.levcount=1;
 	}
 	async start() {
 	for (this.round=1;this.round<=3;this.round++) {
-	speech.speak("new round"+this.round);
-this.gm=so.create("bgm"+this.level);
+	this.gm=so.create("bgm"+this.level);
 if (this.level<30) so.enqueue("bgm"+(Number(this.level)+1));
 so.loadQueue();
 this.sp=so.create("round"+lang);
@@ -47,7 +49,7 @@ this.sp=so.create("startwith"+lang);
 await this.sp.playSync();
 if (pack==1) this.sp=so.create("speaker_"+lang+"_color_1_"+this.gamer.color);
 await this.sp.playSync();
-this.mycube.color=this.gamer.color;
+this.mycube=Object.assign( Object.create( Object.getPrototypeOf(this.gamer)), this.gamer);
 this.mycube.move(utils.randomInt(1,4));
 await utils.sleep(utils.randomInt(1400,2500));
 if (!this.gm.playing) {
@@ -110,7 +112,7 @@ this.sp.play();
 }//levcount
 else {//levcount isn't capped...
 this.levcount++;
-this.mycube.color=this.gamer.color;
+this.mycube=Object.assign( Object.create( Object.getPrototypeOf(this.gamer)), this.gamer);
 this.mycube.move(utils.randomInt(1,4));
 if (pack==1) this.sp=so.create("speaker_"+lang+"_color_"+this.aggressivity+"_"+this.mycube.color);
 this.sp.play();
@@ -118,7 +120,7 @@ this.gotit=false;
 }//levcount
 }//color
 else {
-this.mycube.color=this.gamer.color;
+this.mycube=Object.assign( Object.create( Object.getPrototypeOf(this.gamer)), this.gamer);
 this.levcount=1;
 this.gm.stop();
 this.fail.play(); this.pos.pause();
@@ -137,7 +139,7 @@ this.correct();
 this.score+=1;
 }
 else {
-this.mycube.color=this.gamer.color;
+this.mycube=Object.assign( Object.create( Object.getPrototypeOf(this.gamer)), this.gamer);
 this.levcount=1;
 this.gm.stop();
 this.fail.play(); this.pos.pause();
@@ -156,8 +158,7 @@ this.correct();
 this.score+=1;
 }
 else {
-
-this.mycube.color=this.gamer.color;
+this.mycube=Object.assign( Object.create( Object.getPrototypeOf(this.gamer)), this.gamer);
 this.levcount=1;
 //round++;
 this.gm.stop();
@@ -179,8 +180,7 @@ this.correct();
 this.score+=1;
 }
 else {
-
-this.mycube.color=this.gamer.color;
+this.mycube=Object.assign( Object.create( Object.getPrototypeOf(this.gamer)), this.gamer);
 this.levcount=1;
 //round++;
 this.gm.stop();
@@ -201,7 +201,7 @@ this.correct();
 this.score+=1;
 }
 else {
-this.mycube.color=this.gamer.color;
+this.mycube=Object.assign( Object.create( Object.getPrototypeOf(this.gamer)), this.gamer);
 this.levcount=1;
 //this.round++;
 this.gm.stop();
@@ -213,7 +213,6 @@ this.playing=false;
 }
 }
 }//while
-speech.speak("end of loop"+this.round);
 }//for		
 }
 correct() {
