@@ -25,7 +25,7 @@ this.ptop=this.top;
 this.pbot=this.bot;
 this.pleft=this.left;
 this.pright=this.right;
-this.color=Number(this.top)-1;
+this.color=Number(this.top);
 }
 if (dir==3) {
 this.top=this.pleft;
@@ -36,7 +36,7 @@ this.ptop=this.top;
 this.pbot=this.bot;
 this.pleft=this.left;
 this.pright=this.right;
-this.color=Number(this.top)-1;  
+this.color=Number(this.top);  
 }
 if (dir==2) {
 this.top=this.pforward;
@@ -47,7 +47,7 @@ this.ptop=this.top;
 this.pbot=this.bot;
 this.pforward=this.forward;
 this.pback=this.back;
-this.color=Number(this.top)-1;  
+this.color=Number(this.top);  
 }
 if (dir==1) {
 this.top=this.pback;
@@ -58,7 +58,7 @@ this.ptop=this.top;
 this.pbot=this.bot;
 this.pforward=this.forward;
 this.pback=this.back;
-this.color=Number(this.top)-1;  
+this.color=Number(this.top);  
 }
 }//function
 }//class

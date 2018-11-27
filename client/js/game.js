@@ -1,6 +1,6 @@
 import {speech} from './tts';
 import {SoundHandler} from './soundHandler';
-import {pack,lang,start} from './main';
+import {packs,pack,lang,start} from './main';
 import {OldTimer} from './oldtimer';
 import {Cube} from './classes';
 import Timer from './timer';
@@ -29,17 +29,17 @@ this.gamer.move(this.random);
 this.mycube.move(this.random);
 this.pos=new OldTimer();;
 this.level=1;
-this.aggressivity=1;
 this.score=0;
 this.gotit=false;
 this.playing=true;
-this.round=4;
+this.round=0;
 this.levcount=1;
 	}
 	async start() {
-	while (this.round>=0) {
-	this.gm=so.create("bgm"+this.level);
-if (this.level<30) so.enqueue("bgm"+(Number(this.level)+1));
+		this.round++;
+	while (this.round>=0 && this.round<4) {
+	this.gm=so.create(pack+"/bgm"+this.level);
+if (this.level<packs[pack]["bgm"]) so.enqueue(pack+"/bgm"+(Number(this.level)+1));
 so.loadQueue();
 this.sp=so.create("round"+lang);
 await this.sp.playSync();
@@ -47,7 +47,7 @@ this.sp=so.create(lang+"num"+this.round);
 await this.sp.playSync();
 this.sp=so.create("startwith"+lang);
 await this.sp.playSync();
-if (pack==1) this.sp=so.create("speaker_"+lang+"_color_1_"+this.gamer.color);
+this.sp=so.create(pack+"/color"+this.gamer.color);
 await this.sp.playSync();
 this.mycube=Object.assign( Object.create( Object.getPrototypeOf(this.gamer)), this.gamer);
 this.mycube.move(utils.randomInt(1,4));
@@ -57,7 +57,7 @@ this.gm.play();
 this.gm.loop=true;
 }
 this.pos.restart();
-if (pack==1) this.sp=so.create("speaker_"+lang+"_color_"+this.aggressivity+"_"+this.mycube.color);
+this.sp=so.create(pack+"/color"+this.mycube.color);
 this.sp.play();
 this.levcount=1;
 this.gotit=false;
@@ -79,8 +79,6 @@ if (this.levcount==this.levcap) {
 this.gotit=false;
 this.levcount=1;
 this.level++;
-if (this.level<=8) this.aggressivity=1;
-else if (this.level>8) this.aggressivity=2;
 if (this.level<=11) this.levcap=4;
 else if (this.level>11 && this.level<=20) this.levcap=8;
 else if (this.level>20 && this.level<=29) this.levcap=12;
@@ -99,14 +97,14 @@ return;
 }//win
 else {//next level?
 this.gotit=false;
-this.gm=so.create("bgm"+this.level);
+this.gm=so.create(pack+"/bgm"+this.level);
 this.gm.play();
 this.gm.loop=true;
-if (this.level<30) so.enqueue("bgm"+(Number(this.level)+1));
+if (this.level<30) so.enqueue(pack+"/bgm"+(Number(this.level)+1));
 so.loadQueue();
 this.levcount=1;
 this.mycube.move(utils.randomInt(1,4));
-if (pack==1) this.sp=so.create("speaker_"+lang+"_color_"+this.aggressivity+"_"+this.mycube.color);
+this.sp=so.create(pack+"/color"+this.mycube.color);
 this.sp.play();
 }//going for the next level, win
 }//levcount
@@ -114,7 +112,7 @@ else {//levcount isn't capped...
 this.levcount++;
 this.mycube=Object.assign( Object.create( Object.getPrototypeOf(this.gamer)), this.gamer);
 this.mycube.move(utils.randomInt(1,4));
-if (pack==1) this.sp=so.create("speaker_"+lang+"_color_"+this.aggressivity+"_"+this.mycube.color);
+this.sp=so.create(pack+"/color"+this.mycube.color);
 this.sp.play();
 this.gotit=false;
 }//levcount
@@ -125,6 +123,8 @@ this.levcount=1;
 this.gm.stop();
 this.fail.play(); this.pos.pause();
 this.input.pause();
+this.round++;
+
 this.fail.sound.once("end",()=> {
 this.playing=false;
 });
@@ -134,7 +134,6 @@ if (this.input.isJustPressed(KeyEvent.DOM_VK_UP) && !this.gotit) {
 this.gamer.move(1);
 if (this.gamer.color==this.mycube.color) {
 this.gotit=true;
-console.log("up");
 this.correct();
 this.score+=1;
 }
@@ -144,6 +143,8 @@ this.levcount=1;
 this.gm.stop();
 this.fail.play(); this.pos.pause();
 this.input.pause();
+this.round++;
+
 this.fail.sound.once("end",()=> {
 this.playing=false;
 });
@@ -164,6 +165,8 @@ this.levcount=1;
 this.gm.stop();
 this.fail.play(); this.pos.pause();
 this.input.pause();
+this.round++;
+
 this.fail.sound.once("end",()=> {
 this.playing=false;
 });
@@ -186,6 +189,8 @@ this.levcount=1;
 this.gm.stop();
 this.fail.play(); this.pos.pause();
 this.input.pause();
+this.round++;
+
 this.fail.sound.once("end",()=> {
 this.playing=false;
 });
@@ -203,22 +208,22 @@ this.score+=1;
 else {
 this.mycube=Object.assign( Object.create( Object.getPrototypeOf(this.gamer)), this.gamer);
 this.levcount=1;
-//this.round++;
 this.gm.stop();
 this.fail.play(); this.pos.pause();
 this.input.pause();
+this.round++;
+
 this.fail.sound.once("end",()=> {
 this.playing=false;
 });
 }
 }
 }//while
-this.round--;
 }//round loop
 }
 correct() {
 this.sounds.playStatic("speaker_"+lang+"_good"+utils.randomInt(1,4),false);
-if (pack==1) this.sounds.playStatic("good"+utils.randomInt(1,2),false);
+this.sounds.playStatic("good"+utils.randomInt(1,2),false);
 }
 speakstats() {
 }

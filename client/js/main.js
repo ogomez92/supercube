@@ -1,10 +1,15 @@
 export var gameID="cube";
+export var packs={
+	"default":{
+		bgm:30,
+}
+}
 import {SoundHandler} from './soundHandler';
 import {utils} from './utilities';
 import {Cube} from './classes';
 import {KeyboardInput} from './input';
 import {KeyEvent} from './keycodes';
-export var pack=1;
+export var pack="default";
 import {so} from './soundObject';
 export var lang=0;
 import {Game} from './game';
@@ -78,24 +83,24 @@ let inp=new KeyboardInput();
 let pool=new SoundHandler();
 let cube=new Cube();
 inp.init();
-if (pack==1) pool.playStatic("speaker_"+lang+"_color_1_"+cube.color,false);
+pool.playStatic(pack+"/color"+cube.color,false);
 while (!inp.isJustPressed(KeyEvent.DOM_VK_Q)) {
 await utils.sleep(5);
 if (inp.isJustPressed(KeyEvent.DOM_VK_UP)) {
 cube.move(1);
-if (pack==1) pool.playStatic("speaker_"+lang+"_color_1_"+cube.color,false);
+pool.playStatic(pack+"/color"+cube.color,false);
 }
 if (inp.isJustPressed(KeyEvent.DOM_VK_DOWN)) {
 cube.move(2);
-if (pack==1) pool.playStatic("speaker_"+lang+"_color_1_"+cube.color,false);
+pool.playStatic(pack+"/color"+cube.color,false);
 }
 if (inp.isJustPressed(KeyEvent.DOM_VK_LEFT)) {
 cube.move(4);
-if (pack==1) pool.playStatic("speaker_"+lang+"_color_1_"+cube.color,false);
+pool.playStatic(pack+"/color"+cube.color,false);
 }
 if (inp.isJustPressed(KeyEvent.DOM_VK_RIGHT)) {
 cube.move(3);
-if (pack==1) pool.playStatic("speaker_"+lang+"_color_1_"+cube.color,false);
+pool.playStatic(pack+"/color"+cube.color,false);
 }
 
 }
