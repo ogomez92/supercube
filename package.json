@@ -1,13 +1,15 @@
 {
-  "name": "template",
-  "version": "1.0.5",
-  "description": "Template",
+  "name": "Supercube",
+  "version": "2.0.5",
+  "description": "Supercube game",
   "main": "./client/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "parcel watch ./client/js/main.js -d ./client --target=electron",
-    "build": "parcel build ./client/js/main.js -d ./client --target=browser",
+    "build": "parcel build ./client/js/main.js -d ./client --target=electron",
+    "bundle": "parcel build ./client/js/main.js -d ./client --no-source-maps",
     "start": "electron ./client",
+    "run": "npm run build && npm run start",
     "server": "http-server ./client"
   },
   "repository": {
@@ -17,15 +19,34 @@
   "author": "Oriol Gomez",
   "license": "GPL",
   "dependencies": {
-    "electron": "^3.0.10",
-    "electron-builder": "^20.36.2",
-    "howler": "^2.0.15",
-    "http-server": "^0.11.1",
-    "jquery": "^3.3.1",
-    "parcel-bundler": "^1.10.3",
+    "agk-ui": "0.0.2",
+    "babel-polyfill": "^6.26.0",
+    "copy-to-clipboard": "^3.2.0",
+    "hammerjs": "^2.0.8",
+    "howler": "^2.1.2",
+    "jquery": "^3.4.1",
+    "number-words": "^1.1.0",
+    "parcel-bundler": "^1.12.3",
     "s": "^0.1.1",
     "sono": "^2.1.6",
-    "string-digits": "0.0.5",
-    "unique-random": "^2.0.0"
+    "speak-tts": "^2.0.8",
+    "string-digits": "0.0.6",
+    "unique-random": "^2.1.0"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-runtime": "^6.23.0"
+  },
+  "build":{
+    "compression": "maximum",
+    "win": {
+      "target": [
+        {
+          "target": "zip",
+          "arch": [
+            "ia32"
+          ]
+        }
+      ]
+}
   }
 }

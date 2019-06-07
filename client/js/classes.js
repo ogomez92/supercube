@@ -8,12 +8,22 @@ this.pright = 4;
 this.pforward = 3;
 this.pback = 5;
 this.top=1;
-this.color=0;
+this.color=1;
 this.bot =6;
 this.left = 2;
 this.right = 4;
 this.forward = 3;
 this.back = 5;
+}
+compare(c) {
+	let changes=0;
+	if (c.top!=this.top) changes++;
+	if (c.bot!=this.bot) changes++;	
+		if (c.right!=this.right) changes++;
+			if (c.left!=this.left) changes++;
+				if (c.backward!=this.backward) changes++;
+					if (c.forward!=this.forward) changes++;
+					return changes;
 }
 move(dir) {
 if (dir==4) {

@@ -7,9 +7,8 @@ class KeyboardInput {
 		this.justPressed = [];
 		this.chars = [];
 		this.justReleased = [];
-		this.paused=false;
 		this.justPressedEventCallback = null;
-		this.charEventCallback=null;
+		this.charEventCallback = null;
 	}
 
 	init() {
@@ -17,20 +16,20 @@ class KeyboardInput {
 		// 		$(document).keydown(function(event) { that.handleKeyDown(event); });
 		// 		$(document).keyup(function(event) { that.handleKeyUp(event); });
 		document.addEventListener('keydown', event => {
- that.handleKeyDown(event);
+			that.handleKeyDown(event);
 		});
 		document.addEventListener('keyup', event => {
- that.handleKeyUp(event);
+			that.handleKeyUp(event);
 		});
-				document.addEventListener('keypress', event => {
- that.handleChar(event);
-				});
+		document.addEventListener('keypress', event => {
+			that.handleChar(event);
+		});
 	}
 pause() {
-this.paused=true;
+	this.isPaused=true;
 }
 resume() {
-this.paused=false;
+this.isPaused=false;	
 }
 	handleKeyDown(event) {
 		if (this.keyDown[event.which] != true || typeof this.keyDown[event.which] === 'undefined') {
@@ -38,21 +37,20 @@ this.paused=false;
 			this.justPressed[event.which] = true;
 			this.justReleased[event.which] = false;
 			if (typeof this.justPressedEventCallback !== 'undefined' && this.justPressedEventCallback != null) {
-this.justPressedEventCallback(event.which);
+				this.justPressedEventCallback(event.which);
 			}
 		}
 	}
 
 	handleChar(char) {
-	if (char.which<48 || char.which > 122) {
-	return; 
-	}
+		if (char.which < 48 || char.which > 122) {
+			return;
+		}
 		if (String.fromCharCode(char.which) != '') {
 			this.chars += String.fromCharCode(char.which);
 			if (typeof this.charEventCallback !== 'undefined' && this.charEventCallback != null) {
-this.charEventCallback(String.fromCharCode(char.which));
+				this.charEventCallback(String.fromCharCode(char.which));
 			}
-
 		}
 	}
 
@@ -64,38 +62,40 @@ this.charEventCallback(String.fromCharCode(char.which));
 		}
 		this.chars = '';
 	}
-
+destroy() {
+	this.charEventCallback = null;
+	this.justPressedEventCallback=null;
+}
 	isDown(event) {
-	if (this.paused) return false;
+		if (this.isPaused) return false;
 		return this.keyDown[event];
 	}
 
 	isJustPressed(event) {
-	
+		if (this.isPaused) return false;
 		if (this.justPressed[event] == true) {
 			this.justPressed[event] = false;
-			if (this.paused) return false;
 			return true;
 		}
 		return false;
 	}
 
 	isJustReleased(event) {
-			if (this.justReleased[event]) {
+		if (this.justReleased[event]) {
 			this.justReleased[event] = false;
-			if (this.paused) return false;
 			return true;
 		}
 		return false;
 	}
+
 	keysDown() {
 		const kd = [];
-	this.keyDown.forEach((v, i) => {
-		if (v) {
-	kd.push(i);
-		}
-	});
-	return kd;
+		this.keyDown.forEach((v, i) => {
+			if (v) {
+				kd.push(i);
+			}
+		});
+		return kd;
 	}
 
 	getChars() {
@@ -105,14 +105,14 @@ this.charEventCallback(String.fromCharCode(char.which));
 	}
 
 	keysPressed() {
-			const kd = [];
-	this.justPressed.forEach((v, i) => {
-		if (v) {
-	kd.push(i);
-		}
-	});
-	this.justPressed.splice();
-	return kd;
+		const kd = [];
+		this.justPressed.forEach((v, i) => {
+			if (v) {
+				kd.push(i);
+			}
+		});
+		this.justPressed.splice();
+		return kd;
 	}
 
 	releaseAllKeys() {
@@ -121,13 +121,13 @@ this.charEventCallback(String.fromCharCode(char.which));
 
 	keysReleased() {
 		const kd = [];
-	this.justReleased.forEach((v, i) => {
-		if (v) {
-	kd.push(i);
-		}
-	});
-	this.justReleased.splice();
-	return kd;
+		this.justReleased.forEach((v, i) => {
+			if (v) {
+				kd.push(i);
+			}
+		});
+		this.justReleased.splice();
+		return kd;
 	}
 }
 
