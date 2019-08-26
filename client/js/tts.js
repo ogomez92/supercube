@@ -41,12 +41,13 @@ setRate(r) {
 		this.rate=newRate;
 	this.synth.setRate(newRate);
 }
-queue(text) {
-	if (this.webTTS) {
+speak(text,queue=false) {
 
+	if (this.webTTS) {
+try {
 		this.synth.speak({
 text:text,
-queue:true,
+queue:queue,
 listeners:{
 	onstart: () => {
 this.duck();
@@ -54,32 +55,16 @@ this.duck();
 	onend: () => {
 		this.unduck();
 	},
-},
-})
-}
-else {
-	document.getElementById('speech').innerHTML = '';
-	const para = document.createElement('p');
-	para.appendChild(document.createTextNode(text));
-	document.getElementById('speech').appendChild(para);
-}
-} // End speak()
-
-speak(text) {
-	if (this.webTTS) {
-		this.synth.speak({
-text:text,
-queue:false,
-listeners:{
-	onstart: () => {
-this.duck();
-	},
-	onend: () => {
-		this.unduck();
+	onerror: (err) => {
+console.log("meow");
+this.setVoice(null,true);
+return false;
 	},
 }
-
 })
+} catch {
+}
+
 }
 else {
 	document.getElementById('speech').innerHTML = '';
@@ -121,7 +106,7 @@ async changeRate() {
 	}
 }
 
-setVoice(cb) {
+setVoice(cb,silent=false) {
 	//what language do we want?
 	let wl="en";
 	if (lang==1) wl="en";
@@ -135,10 +120,11 @@ setVoice(cb) {
 					voiceArray.push(this.voices[k].name)
 				}
 		}
-	speech.speak(strings.get("selectVoice",[voiceArray.length]));
+	if (!silent) speech.speak(strings.get("selectVoice",[voiceArray.length]));
 	let input=new KeyboardInput()
 		let selection=-1;
 	input.init();
+if (!silent) {
 	input.justPressedEventCallback=((key)=> {
 			if (key==KeyEvent.DOM_VK_DOWN) {
 			selection++;
@@ -165,7 +151,17 @@ setVoice(cb) {
 			}
 			}//enter action
 	});//callback
-
+} //not silent
+else {
+try {
+for (let i=1;i<voiceArray.length;i++) {
+console.log("trying to set voice");
+this.synth.setVoice(voiceArray[i]);
+}//for
+} catch(err) {
+console.log("Can't find suitable voices."+err.message);
+} // catch block
+}//else
 }//function
 duck() {
 	if (this.ducking) return;

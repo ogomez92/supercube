@@ -38,14 +38,16 @@ document.addEventListener('DOMContentLoaded', setup);
 async function setup() {
 	id=document.getElementById('touchArea');
 //the below is an example of a new version notifier. The version2 variable can be used and compared inside a menu or wherever, and would contain the new version of your game based on what your server returns.
-/*let prom=new Promise((resolve,reject)=> {
-fetch('http://yourserver.com/versions.php?gameVersionRequest='+gameID)
+let prom=new Promise((resolve,reject)=> {
+fetch('http://oriolgomez.com/versions.php?gameVersionRequest='+gameID)
 						 .then(event => event.text()) //convert http response into text
 			.then(data => {
 				version2=data;
 				resolve(data); //resolve promise let go.
 			});
-});*/
+});
+let logo=so.create("logo");
+await logo.playSync();
 let langs=new LanguageSelector("langSelect",(result)=> {
 	lang=result;
 vo.prepend="speaker_"+lang+"_num_";
@@ -87,7 +89,7 @@ else if (s.selected=="v") {
 	});
 }
 else if (s.selected=="m") {
-memory();
+startmemory();
 }
 else if (s.selected=="p") {
 pusher();
@@ -96,16 +98,12 @@ pusher();
 mainMenu.destroy();
 });
              	}
-function memory() {
-const memory=new Memory();
-memory.init();
-}
 function pusher() {
 const pusher=new pusher();
 pusher.init();
 }
 function loadGame() {
-	speech.speak("ok");
+
 const game=new Game();
 	game.start();
 }
@@ -128,6 +126,33 @@ loadGame();
 });
 so.loadQueue();
 }
+
+//memory time
+function loadMemory() {
+	speech.speak("ok");
+const game=new Memory();
+	game.start();
+}
+function startmemory() {
+	let prog=so.create("progress");
+	prog.loop=true;
+	prog.play();
+for (let i=1;i<=packs[pack]["bgm"];i++) {
+	so.enqueue(pack+"/bgm"+i);
+}
+for (let i=1;i<=6;i++) {
+so.enqueue(pack+"/color"+i);
+}
+so.enqueue(pack+"/fail");
+so.enqueue(pack+"/good");
+so.enqueue(pack+"/goodExtra");
+so.setQueueCallback(()=> {
+	prog.stop();
+loadMemory();
+});
+so.loadQueue();
+}
+
 export async function practice(cube=new Cube(),round=1,lev,max) {
 	let inp=new KeyboardInput();
 let pool=new SoundHandler();

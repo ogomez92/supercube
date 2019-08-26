@@ -54,7 +54,6 @@ selectVoice:"%1 voices available, use the up and down arrows to select a voice, 
 	}
 
 	get(what, rep = []) {
-		console.log("I get with lang "+lang);
 		let str;
 		if (typeof this.strings[lang][what] !== 'undefined') {
 			str = this.strings[lang][what];

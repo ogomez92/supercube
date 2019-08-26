@@ -276,7 +276,7 @@ async failExtra() {
 		async speakstats() {
 		}
 
-		async init() {
+		async start() {
 		this.lastlevel=1;
 		this.memtime=new OldTimer();
 		this.levcap=4;
@@ -298,8 +298,7 @@ async failExtra() {
 						this.gm.loop=true;
 		this.levcount=1;
 		for (this.round=1;this.round<=3;this.round++) {
-			await speak("round");
-			await vo.speakWait(this.round);
+			this.gamer=await practice(this.gamer,this.round,this.level,packs[pack]["bgm"]);
 			this.mycube=utils.copyObject(this.gamer);
 			this.chain=[];
 			let rand=0;
@@ -339,7 +338,6 @@ async failExtra() {
 					this.gm.stop();
 					await this.fail.playSync();
 					await this.failExtra();
-
 
 				}
 				if (this.input.isJustPressed(KeyEvent.DOM_VK_UP)) {

@@ -1,10 +1,14 @@
 'use strict';
 import {so} from './soundObject';
 
+import {KeyboardInput} from './input';
+import {KeyEvent} from './keycodes';
 import {speech} from './tts';
 class LanguageSelector {
 constructor(element,callback) {
 	this.langs=[];
+this.input=new KeyboardInput();
+this.input.init();
 	this.langs.push("select a language. Selecciona un idioma.");
 	this.langs.push("I want to play in English");
 	this.langs.push("Quiero jugar en español.");
@@ -25,13 +29,20 @@ this.buttons[i].addEventListener('click', () => {
 });
 this.buttons[i].addEventListener('focus', () => { 
 	this.sound.stop();
-	speech.speak(this.langs[i])
+	speech.setLanguage(i);
+	speech.speak(this.langs[i]);
 });
 this.container.appendChild(this.buttons[i]);
+this.input.once("chr"+i,()=> {
+	this.callback(i);
+			this.container.innerHTML = '';
+this.input.removeAllListeners();
+});
 				}
 		this.id.appendChild(this.container);
-		this.sound=so.create("ui/lang_select");
+		this.sound=so.create("ui/langSelect");
 		this.sound.play();
+
 	}
 }
 module.exports.LanguageSelector = LanguageSelector;
