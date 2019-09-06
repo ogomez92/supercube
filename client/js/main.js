@@ -25,7 +25,7 @@ import {KeyEvent} from './keycodes';
 export var pack="default";
 import {so} from './soundObject';
 export var lang=0;
-import {Memory,Game} from './game';
+import {CodeBreaker,Memory,Game} from './game';
 import {Pusher} from './pusher';
 export var version="1.0";
 export var version2="";
@@ -37,6 +37,7 @@ import $ from 'jquery';
 document.addEventListener('DOMContentLoaded', setup);
 async function setup() {
 	id=document.getElementById('touchArea');
+document.getElementById("speech").focus();
 //the below is an example of a new version notifier. The version2 variable can be used and compared inside a menu or wherever, and would contain the new version of your game based on what your server returns.
 let prom=new Promise((resolve,reject)=> {
 fetch('http://oriolgomez.com/versions.php?gameVersionRequest='+gameID)
@@ -47,6 +48,7 @@ fetch('http://oriolgomez.com/versions.php?gameVersionRequest='+gameID)
 			});
 });
 let logo=so.create("logo");
+await strings.check(2);
 await logo.playSync();
 let langs=new LanguageSelector("langSelect",(result)=> {
 	lang=result;
@@ -76,7 +78,7 @@ let items=[];
 items.push(new MenuItem("s",strings.get("menu_startgame")));
 items.push(new MenuItem("m",strings.get("menu_memory")));
 items.push(new MenuItem("v",strings.get("mSelectVoice")));
-items.push(new MenuItem("p",strings.get("menu_pusher")));
+items.push(new MenuItem("cb",strings.get("menu_cb")));
 let mainMenu=new Menu(strings.get("menu_intro"),items);
 mainMenu.run(async(s) => {
 	await music.fade(800);
@@ -91,17 +93,14 @@ else if (s.selected=="v") {
 else if (s.selected=="m") {
 startmemory();
 }
-else if (s.selected=="p") {
-pusher();
+else if (s.selected=="cb") {
+startcb();
 }
+
 
 mainMenu.destroy();
 });
              	}
-function pusher() {
-const pusher=new pusher();
-pusher.init();
-}
 function loadGame() {
 
 const game=new Game();
@@ -129,7 +128,6 @@ so.loadQueue();
 
 //memory time
 function loadMemory() {
-	speech.speak("ok");
 const game=new Memory();
 	game.start();
 }
@@ -137,9 +135,6 @@ function startmemory() {
 	let prog=so.create("progress");
 	prog.loop=true;
 	prog.play();
-for (let i=1;i<=packs[pack]["bgm"];i++) {
-	so.enqueue(pack+"/bgm"+i);
-}
 for (let i=1;i<=6;i++) {
 so.enqueue(pack+"/color"+i);
 }
@@ -152,12 +147,34 @@ loadMemory();
 });
 so.loadQueue();
 }
+function loadcb() {
 
-export async function practice(cube=new Cube(),round=1,lev,max) {
+const game=new CodeBreaker();
+	game.start();
+}
+function startcb() {
+	let prog=so.create("progress");
+	prog.loop=true;
+	prog.play();
+for (let i=1;i<=6;i++) {
+so.enqueue(pack+"/color"+i);
+}
+so.enqueue(pack+"/fail");
+so.enqueue(pack+"/good");
+so.enqueue(pack+"/goodExtra");
+so.setQueueCallback(()=> {
+	prog.stop();
+loadcb();
+});
+so.loadQueue();
+}
+
+
+export async function practice(cube=new Cube(),round=1,lev,max,mode=1) {
 	let inp=new KeyboardInput();
 let pool=new SoundHandler();
 inp.init();
-speech.speak(strings.get("reviewCube",[round,lev,max]));
+speech.speak(strings.get("reviewCube"+mode,[round,lev,max]));
 while (!inp.isJustPressed(KeyEvent.DOM_VK_RETURN)) {
 await utils.sleep(5);
 if (inp.isJustPressed(KeyEvent.DOM_VK_SPACE)) {

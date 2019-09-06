@@ -1,11 +1,1 @@
-Try all levels, auto unfail
-try that winning works
-
-1.In your main.js define a variable like
-     global.sharedObject = {prop1: process.argv}
-2.In your app just linclude remote and use this sharedObject
-    var remote = require('electron').remote,
-      arguments = remote.getGlobal('sharedObject').prop1;
-
-    console.log(arguments);
-3.Output will be ["argv1", "argv2"]
+maybe code breaker should have it dynamically add time, we'll see

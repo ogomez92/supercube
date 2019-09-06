@@ -242,7 +242,7 @@ correct() {
 	this.mycube=utils.copyObject(this.gamer);
 	this.averageTotal.push(this.pos.elapsed);
 	let chance=utils.randomInt(0,this.pos.elapsed);
-if (chance<180) {
+if (chance<100) {
 		this.sounds.playStatic(pack+"/goodExtra",false);
 		this.lives++;
 } else {
@@ -298,7 +298,7 @@ async failExtra() {
 						this.gm.loop=true;
 		this.levcount=1;
 		for (this.round=1;this.round<=3;this.round++) {
-			this.gamer=await practice(this.gamer,this.round,this.level,packs[pack]["bgm"]);
+			this.gamer=await practice(this.gamer,this.round,this.level,packs[pack]["bgm"],2);
 			this.mycube=utils.copyObject(this.gamer);
 			this.chain=[];
 			let rand=0;
@@ -450,5 +450,151 @@ return;
 		
 		}
 
-	}//memory class, add an additional brace from the bgt file.
-export {Game,Memory}
+	}//memory add an additional brace from the bgt file.
+	class CodeBreaker {
+		constructor() {
+			this.sounds=new SoundHandler();
+			this.score=0;
+			this.colors=[];
+			this.colors[0]=0;
+			for (let i=1;i<=6;i++) {
+				this.colors.push(so.create(pack+"/color"+i));
+			}
+
+		}
+		async failExtra() {
+			if (this.score<1) return;
+			await vo.speakWait(this.score);
+			await speak("points");
+		}
+		async speakstats() {
+		}
+
+		async start() {
+		this.lastlevel=1;
+		this.codetime=new OldTimer();
+this.extraTime=0;
+		this.fail=so.create("codeBad");
+this.timeOver=so.create("timeOver");
+this.timeOverClose=so.create("timeOverRage");
+		this.gamer=new Cube();
+		
+		this.mycube=new Cube();
+		this.level=1;
+		this.gm=so.create(pack+"/bgmm");
+		this.input=new KeyboardInput();
+		this.input.init();
+		this.length=4;
+this.warned=false;
+		this.chain=[];
+this.chainLocate=0;
+		this.score=0;
+		this.playing=true;
+		this.gotit=false;
+		this.round=0;
+						this.gm.loop=true;
+		this.levcount=1;
+		for (this.round=1;this.round<=1;this.round++) {
+			this.gamer=await practice(this.gamer,this.level,this.level,0,3);
+			this.mycube=utils.copyObject(this.gamer);
+			this.chain=[];
+this.chainLocate=0;
+			let rand=0;
+			for (let i=1;i<=this.length;i++) {
+				rand=utils.randomInt(1,4);
+				this.mycube.move(rand);
+				this.chain.push(this.mycube.color);
+			}//for
+			await utils.sleep(1400,2500);
+			if (!this.gm.playing) 				this.gm.play();
+			this.levcount=1;
+			this.gotit=false;
+			this.codetime.restart();
+			this.playing=true;
+			while (this.playing) {
+				await utils.sleep(16);
+				if (this.input.isJustPressed(KeyEvent.DOM_VK_ESCAPE)) {
+					this.gm.stop();
+					this.playing=false;
+					this.speakstats();
+					start();
+					return;
+				}
+let time=20000+(this.level*4000)
+time=time-this.codetime.elapsed;
+if (time<4100 && !this.warned) {
+this.sounds.playStatic("codeWarning",false);
+this.warned=true;
+}
+				if (this.codetime.elapsed>=20000+(this.level*4000)) {
+					this.playing=false;
+					this.mycube=utils.copyObject(this.gamer);
+					this.levcount=1;
+					this.gm.stop();
+					if (this.chainLocate==this.chain.length-1) await this.timeOverClose.playSync();
+					if (this.chainLocate!=this.chain.length-1) await this.timeOver.playSync();
+if (this.chain.length>4) await new ScrollingText(strings.get("codeOver",[this.chain.length-4,this.chain.length-1]));
+if (this.chain.length<4) await new ScrollingText(strings.get("codeOverZero"));
+				}
+				if (this.input.isJustPressed(KeyEvent.DOM_VK_UP)) {
+					this.gamer.move(1);
+this.codeProcess(1);
+				}
+				if (this.input.isJustPressed(KeyEvent.DOM_VK_DOWN)) {
+					this.gamer.move(2);
+this.codeProcess(2);
+				}
+				if (this.input.isJustPressed(KeyEvent.DOM_VK_LEFT)) {
+					this.gamer.move(4);
+this.codeProcess(4);
+				}
+				if (this.input.isJustPressed(KeyEvent.DOM_VK_RIGHT)) {
+					this.gamer.move(3);
+this.codeProcess(3);
+				}
+				
+		}//while
+}//for
+		this.playing=false;
+		this.level=500;
+		await this.speakstats();
+start();
+return;
+		}//function
+
+codeProcess(v) {
+this.sounds.playStatic(pack+"/color"+this.gamer.color,false);
+if (this.chain[this.chainLocate]==this.gamer.color) {
+this.chainLocate++;
+this.sounds.playStatic("codeRight",false);
+}
+else {
+this.chainLocate=0;
+this.fail.stop(); this.fail.play();
+if (this.chain[this.chainLocate]==this.gamer.color) {
+this.chainLocate++;
+setTimeout(()=> {
+this.sounds.playStatic("codeRight",false);
+},100);
+}
+
+}
+if (this.chainLocate>=this.chain.length) {
+this.sounds.playStatic("codeComplete",false);
+	this.length++;
+	this.chain=[];
+this.chainLocate=0;
+this.warned=false;
+this.level++;
+				this.mycube=utils.copyObject(this.gamer);
+	let rand=0;
+	for (let i=1;i<=this.length;i++) {
+		rand=utils.randomInt(1,4);
+		this.mycube.move(rand);
+		this.chain.push(this.mycube.color);
+	}//for
+this.codetime.restart();
+}
+			}
+	}//code breaker.
+export {Game,Memory,CodeBreaker}
