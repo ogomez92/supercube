@@ -1,6 +1,6 @@
 {
   "name": "Supercube",
-  "version": "2.0.5",
+  "version": "2.0.0",
   "description": "Supercube game",
   "main": "./client/index.js",
   "scripts": {

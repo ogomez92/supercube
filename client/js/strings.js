@@ -16,7 +16,7 @@ codeOverZero:"Game over! You did not crack any codes. Go back to robbing your lo
 			reviewCube2: "Round %1. Use the arrow keys to review this cube, and enter when you are done. The space bar repeats the top value. The goal of the game is to memorize as many moves as you can.",
 reviewCube3:"Welcome to code breaker! You will need to find the right combination of moves before the time runs out. You start with a code of 4 moves, and the first move is not necessarily your starting value. Every time you make a wrong move, you'll have to find the top value you started with. How many codes can you crack?",
 			scoreReader: "%1 lives. Your score is %2 points, with an average reaction time of %3.",
-			
+						finalScore: "Your final score is %1 points, with an average reaction time of %2.",
 			menu_intro:"Welcome to supercube! This is the main menu. Use the traditional keys to navigate this menu. You can also press the first letter of a menu option for faster navigation.",
 			"menu_startgame": "Cube the music",
 			"menu_memory": "Memory man",
@@ -56,7 +56,7 @@ menu_intro: "Bienvenido a cubus Máximus! Este es el menú principal. Usa las fl
 menu_startgame:"Jugar al musicubo",
 codeOverZero:"Has terminado! No has conseguido romper ningún código... Mejor vete a robar las taquillas del cole.",
 scoreReader:"%1 vidas. Tu puntuación es %2 puntos, con un tiempo de media de reacción de %3.",
-
+finalScore:"Tu puntuación final es de %1 puntos, con un tiempo de media de %2.",
 menu_memory:"El memorión",
 menu_cb: "Rompecódigos",
 mSelectVoice:"Cambiar voz de la tts",

@@ -27,7 +27,9 @@ import {so} from './soundObject';
 export var lang=0;
 import {CodeBreaker,Memory,Game} from './game';
 import {Pusher} from './pusher';
-export var version="1.0";
+var packageFile=require('../../package.json');
+export var version =packageFile.version;
+
 export var version2="";
 import {Menu} from './menu';
 import {MenuItem,AudioItem,MenuTypes} from './menuItem';
@@ -40,7 +42,7 @@ async function setup() {
 document.getElementById("speech").focus();
 //the below is an example of a new version notifier. The version2 variable can be used and compared inside a menu or wherever, and would contain the new version of your game based on what your server returns.
 let prom=new Promise((resolve,reject)=> {
-fetch('http://oriolgomez.com/versions.php?gameVersionRequest='+gameID)
+fetch('http://oriolgomez.com/versions.php?id='+gameID)
 						 .then(event => event.text()) //convert http response into text
 			.then(data => {
 				version2=data;
@@ -77,8 +79,11 @@ let sl="speaker_"+lang+"_";
 let items=[];
 items.push(new MenuItem("s",strings.get("menu_startgame")));
 items.push(new MenuItem("m",strings.get("menu_memory")));
-items.push(new MenuItem("v",strings.get("mSelectVoice")));
 items.push(new MenuItem("cb",strings.get("menu_cb")));
+	if (version2 != '' && version != version2) {
+		items.push(new MenuItem("u", strings.get('newUpdate', [version, version2])));
+	}
+items.push(new MenuItem("v",strings.get("mSelectVoice")));
 let mainMenu=new Menu(strings.get("menu_intro"),items);
 mainMenu.run(async(s) => {
 	await music.fade(800);
@@ -96,7 +101,10 @@ startmemory();
 else if (s.selected=="cb") {
 startcb();
 }
-
+else if (s.selected=="u") {
+start();
+return;
+}
 
 mainMenu.destroy();
 });

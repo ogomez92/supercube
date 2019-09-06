@@ -85,7 +85,7 @@ this.win=so.create("winner");
 this.gm.stop();
 await win.playSync();
 await this.speakstats();
-this.round=4;
+this.round=1000000;
 start();
 this.playing=false;
 return;
@@ -115,7 +115,6 @@ this.mycube=Object.assign( Object.create( Object.getPrototypeOf(this.gamer)), th
 this.levcount=1;
 this.gm.stop();
 this.fail.play(); this.pos.pause();
-
 this.input.pause();
 this.round++;
 
@@ -237,6 +236,9 @@ this.playing=false;
 }
 }//while
 }//round loop
+await this.speakstats();
+start();
+return;
 }
 correct() {
 	this.mycube=utils.copyObject(this.gamer);
@@ -250,10 +252,13 @@ if (chance<100) {
 }
 }
 async speakstats() {
+	await new ScrollingText(strings.get("finalScore",[this.score,utils.averageInt(this.averageTotal)]));
+start();
+return;
 }
 async failExtra() {
 	if (this.score<1) return;
-	await new ScrollingText(strings.get("scoreReader",[this.lives-this.round,this.score,utils.averageInt(this.averageTotal)]));
+	if (this.lives-this.round>0) await new ScrollingText(strings.get("scoreReader",[this.lives-this.round,this.score,utils.averageInt(this.averageTotal)]));
 }
 
 	}
@@ -275,7 +280,6 @@ async failExtra() {
 		}
 		async speakstats() {
 		}
-
 		async start() {
 		this.lastlevel=1;
 		this.memtime=new OldTimer();
@@ -468,6 +472,7 @@ return;
 			await speak("points");
 		}
 		async speakstats() {
+
 		}
 
 		async start() {
@@ -488,6 +493,7 @@ this.timeOverClose=so.create("timeOverRage");
 this.warned=false;
 		this.chain=[];
 this.chainLocate=0;
+this.chainHighest=0;
 		this.score=0;
 		this.playing=true;
 		this.gotit=false;
@@ -499,6 +505,8 @@ this.chainLocate=0;
 			this.mycube=utils.copyObject(this.gamer);
 			this.chain=[];
 this.chainLocate=0;
+this.chainHighest=0;
+
 			let rand=0;
 			for (let i=1;i<=this.length;i++) {
 				rand=utils.randomInt(1,4);
@@ -531,10 +539,10 @@ this.warned=true;
 					this.mycube=utils.copyObject(this.gamer);
 					this.levcount=1;
 					this.gm.stop();
-					if (this.chainLocate==this.chain.length-1) await this.timeOverClose.playSync();
-					if (this.chainLocate!=this.chain.length-1) await this.timeOver.playSync();
+					if (this.chainHighest==this.chain.length-1) await this.timeOverClose.playSync();
+					if (this.chainHighest!=this.chain.length-1) await this.timeOver.playSync();
 if (this.chain.length>4) await new ScrollingText(strings.get("codeOver",[this.chain.length-4,this.chain.length-1]));
-if (this.chain.length<4) await new ScrollingText(strings.get("codeOverZero"));
+if (this.chain.length==4) await new ScrollingText(strings.get("codeOverZero"));
 				}
 				if (this.input.isJustPressed(KeyEvent.DOM_VK_UP)) {
 					this.gamer.move(1);
@@ -566,7 +574,15 @@ codeProcess(v) {
 this.sounds.playStatic(pack+"/color"+this.gamer.color,false);
 if (this.chain[this.chainLocate]==this.gamer.color) {
 this.chainLocate++;
+if (this.chainLocate>this.chainHighest) {
+this.chainHighest=this.chainLocate;
+this.sounds.playStatic("codeMore",false);
+speech.speak(this.chainHighest+"!");
+}
+else {
 this.sounds.playStatic("codeRight",false);
+}
+
 }
 else {
 this.chainLocate=0;
@@ -582,6 +598,7 @@ this.sounds.playStatic("codeRight",false);
 if (this.chainLocate>=this.chain.length) {
 this.sounds.playStatic("codeComplete",false);
 	this.length++;
+this.chainHighest=0;
 	this.chain=[];
 this.chainLocate=0;
 this.warned=false;
