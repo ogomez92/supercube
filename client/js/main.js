@@ -39,7 +39,7 @@ import $ from 'jquery';
 document.addEventListener('DOMContentLoaded', setup);
 async function setup() {
 	id=document.getElementById('touchArea');
-document.getElementById("speech").focus();
+document.getElementById("app").focus();
 //the below is an example of a new version notifier. The version2 variable can be used and compared inside a menu or wherever, and would contain the new version of your game based on what your server returns.
 let prom=new Promise((resolve,reject)=> {
 fetch('http://oriolgomez.com/versions.php?id='+gameID)
