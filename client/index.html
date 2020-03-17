@@ -3,36 +3,26 @@
 <head role="application">
 <meta 
 charset="utf-8"/>
-<title>Supercube</title>
+<title>Cubux Maximus</title>
 <style type="text/css">
-.touchArea {
-    position: absolute;
-    top:20%;/* Header Height */
-	left:0%;
-       bottom:10%;/* Footer Height */
-       width:80%;height:80%;}
-
 	   .speechArea {
     position: absolute;
     top:0%;/* Header Height */
 	left:25%;
        bottom:80%;/* Footer Height */
        width:80%;height:80%;}
-    	   .languageSelector {
-        position: absolute;
-        top:30%;/* Header Height */
-    	left:30%;
-           bottom:50%;/* Footer Height */
-           width:40%;height:40%;}
-    
 </style>
 
 <script type="text/javascript" src="./main.js"></script>
 
+
 </head>
-<body role="application">
-<div role="application" id="speech" class="speechArea" aria-live="polite"></div>
-<div class="touchArea" id="touchArea">Supercube</div>
+<body id="body" role="application">
+<div>
+<button role="application" id="app">Game</button>
+</div>
+<div  id="speech" class="speechArea" aria-live="polite"></div>
+<div class="touchArea" id="touchArea">Game Window</div>
 <div class="languageSelector" id="langSelect"></div>
 </body>
 </html>
